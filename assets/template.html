@@ -8,7 +8,6 @@
     </head>
     <body>
         <main>
-            % from datetime import datetime
             <h1><a href="/">{{site_title}}</a></h1>
 
             % if next_page or prev_page:
@@ -25,12 +24,14 @@
 
             % for post in posts:
             <article>
-                <h2>{{post["title"]}}</h2>
-
                 {{!post["content"]}}
 
                 <p class="info">
-                    <time>{{datetime.utcfromtimestamp(post["timestamp"]).strftime("%Y-%m-%d %H:%M")}}</time>
+                    <time>Posted on
+                        {{post["timestamp"].strftime("%e %B, %Y")}}
+                        at
+                        {{post["timestamp"].strftime("%H:%M")}}
+                    </time>
                 </p>
             </article>
             % end

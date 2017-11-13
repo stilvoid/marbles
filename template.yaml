@@ -1,28 +1,42 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
+Parameters:
+  SiteName:
+    Type: String
+    Description: Title of the web site
+  BucketName:
+    Type: String
+    Description: Name of S3 bucket that will contain markdown files
 Resources:
-  Bucket:
+  InputBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref BucketName
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
       AccessControl: PublicRead
       WebsiteConfiguration:
         IndexDocument: index.html
   Function:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: service.handler
+      Handler: lambda.handler
       Runtime: python3.6
-      CodeUri: lambda.py
+      CodeUri: lambda.zip
+      Timeout: 300
       Environment:
         Variables:
-          BUCKET: !Ref Bucket
+          OUT_BUCKET: !Ref WebsiteBucket
+          SITE_NAME: !Ref SiteName
       Events:
-        Api:
-          Type: Api
+        S3:
+          Type: S3
           Properties:
-            Path: /
-            Mthod: post
+            Bucket: !Ref InputBucket
+            Events:
+            - s3:ObjectCreated:*
+            - s3:ObjectRemoved:*
       Policies:
       - Version: '2012-10-17'
         Statement:
@@ -30,12 +44,20 @@ Resources:
           Action:
           - s3:GetObject
           - s3:ListBucket
-          - s3:PutObject
-          - s3:PutObjectAcl
           Resource:
           - !Sub 'arn:aws:s3:::${BucketName}'
           - !Sub 'arn:aws:s3:::${BucketName}/*'
+        - Effect: Allow
+          Action:
+          - s3:PutObject
+          - s3:PutObjectAcl
+          Resource:
+          - !Sub 'arn:aws:s3:::${WebsiteBucket}'
+          - !Sub 'arn:aws:s3:::${WebsiteBucket}/*'
 Outputs:
+  InputBucket:
+    Description: Input Bucket
+    Value: !Ref InputBucket
   Website:
     Description: S3 website URL
-    Value: !GetAtt Bucket.WebsiteURL
+    Value: !GetAtt WebsiteBucket.WebsiteURL
