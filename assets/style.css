@@ -1,0 +1,43 @@
+html {
+    font-style: serif;
+    font-size: 14pt;
+    background: #def;
+}
+
+main {
+    margin: 0 auto;
+    max-width: 50em;
+}
+
+main>h1 {
+    text-align: center;
+}
+
+main>h1>a {
+    text-decoration: none;
+    color: #012;
+}
+
+main>article {
+    border: 1px solid #89a;
+    margin: 0.5em;
+    padding: 0 0.5em;
+    border-radius: 0.5em;
+    background: white;
+}
+
+main>nav {
+    display: flex;
+    justify-content: space-around;
+}
+
+main>nav>a {
+    margin: 1em;
+    text-decoration: none;
+    color: #999;
+}
+
+main>nav>a:hover {
+    text-decoration: underline;
+    color: black;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{{site_title}}</title>
+
+        <link rel="stylesheet" href="assets/style.css" />
+        <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
+    </head>
+    <body>
+        <main>
+            % from datetime import datetime
+            <h1><a href="/">{{site_title}}</a></h1>
+
+            % if next_page or prev_page:
+            <nav>
+                % if prev_page:
+                <a href="{{prev_page}}">&laquo; Newer posts</a>
+                % end
+
+                % if next_page:
+                <a href="{{next_page}}">Older posts &raquo;</a>
+                % end
+            </nav>
+            % end
+
+            % for post in posts:
+            <article>
+                <h2>{{post["title"]}}</h2>
+
+                {{!post["content"]}}
+
+                <p class="info">
+                    <time>{{datetime.utcfromtimestamp(post["timestamp"]).strftime("%Y-%m-%d %H:%M")}}</time>
+                </p>
+            </article>
+            % end
+
+            % if next_page or prev_page:
+            <nav>
+                % if prev_page:
+                <a href="{{prev_page}}">&laquo; Newer posts</a>
+                % end
+
+                % if next_page:
+                <a href="{{next_page}}">Older posts &raquo;</a>
+                % end
+            </nav>
+            % end
+        </main>
+    </body>
+</html>
