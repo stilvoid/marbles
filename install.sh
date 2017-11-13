@@ -37,6 +37,9 @@ aws cloudformation deploy --template-file template.out.yaml --stack-name $STACK_
 rm $ZIP_FILE
 rm template.out.yaml
 
+echo "Uploading a sample page to the input bucket..."
+aws s3 cp assets/example.md s3://$input_bucket >/dev/null
+
 website=$(aws cloudformation describe-stacks --stack-name $STACK_NAME | jq -r .Stacks[0].Outputs[1].OutputValue)
 
 echo
